@@ -5,14 +5,29 @@
 // Execute `rustlings hint structs1` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 struct ColorClassicStruct {
-    // TODO: Something goes here
+	green:i32,
+	red:i32,
+	blue:i32,
 }
 
-struct ColorTupleStruct(/* TODO: Something goes here */);
+struct ColorTupleStruct(i32, i32, i32);
 
+impl ColorTupleStruct {
+    //封装字段接口
+    fn red(&self)->i32{
+	self.0
+    }
+    fn green(&self)->i32{
+	self.1
+    }
+    fn blue(&self)->i32{
+	self.2
+    }
+}
+
+//使用 #[derive(Debug)] 自动为其生成 std::fmt::Debug 的实现。
 #[derive(Debug)]
 struct UnitLikeStruct;
 
@@ -22,9 +37,7 @@ mod tests {
 
     #[test]
     fn classic_c_structs() {
-        // TODO: Instantiate a classic c struct!
-        // let green =
-
+	let green = ColorClassicStruct {red:0, green:255, blue:0};
         assert_eq!(green.red, 0);
         assert_eq!(green.green, 255);
         assert_eq!(green.blue, 0);
@@ -32,8 +45,8 @@ mod tests {
 
     #[test]
     fn tuple_structs() {
-        // TODO: Instantiate a tuple struct!
-        // let green =
+        // 实例元祖结构体需使用括号
+        let green = ColorTupleStruct (0 , 255 , 0);
 
         assert_eq!(green.0, 0);
         assert_eq!(green.1, 255);
@@ -43,7 +56,7 @@ mod tests {
     #[test]
     fn unit_structs() {
         // TODO: Instantiate a unit-like struct!
-        // let unit_like_struct =
+        let unit_like_struct =UnitLikeStruct;
         let message = format!("{:?}s are fun!", unit_like_struct);
 
         assert_eq!(message, "UnitLikeStructs are fun!");

@@ -7,7 +7,6 @@
 // Execute `rustlings hint structs3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 #[derive(Debug)]
 struct Package {
@@ -29,12 +28,16 @@ impl Package {
         }
     }
 
-    fn is_international(&self) -> ??? {
-        // Something goes here...
+    fn is_international(&self) -> bool {
+       if self.recipient_country == self.sender_country {
+	    return false;
+       } else{
+	return true;
+       }
     }
 
-    fn get_fees(&self, cents_per_gram: i32) -> ??? {
-        // Something goes here...
+    fn get_fees(&self, cents_per_gram: i32) -> i32 {
+        return cents_per_gram *self.weight_in_grams ;
     }
 }
 
@@ -77,10 +80,11 @@ mod tests {
         let recipient_country = String::from("Spain");
 
         let cents_per_gram = 3;
-
+	//let 不可变变量，不能修改，所以不能在函数中修改，只能在函数外修改
         let package = Package::new(sender_country, recipient_country, 1500);
-
+	//self = 1500*3 = 4500
         assert_eq!(package.get_fees(cents_per_gram), 4500);
+	//self=1500*2*3 = 9000
         assert_eq!(package.get_fees(cents_per_gram * 2), 9000);
     }
 }
