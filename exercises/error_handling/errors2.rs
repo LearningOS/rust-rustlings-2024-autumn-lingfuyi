@@ -19,16 +19,18 @@
 // Execute `rustlings hint errors2` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
+/*
+问题：原函数未正确处理字符串解析失败的情况，导致编译错误且无法返回预期的错误信息。
+修复：使用 ? 操作符将 parse 的错误直接传播，使函数返回 Result 类型的错误。
+*/
 use std::num::ParseIntError;
 
 pub fn total_cost(item_quantity: &str) -> Result<i32, ParseIntError> {
     let processing_fee = 1;
     let cost_per_item = 5;
-    let qty = item_quantity.parse::<i32>();
+    let qty = item_quantity.parse::<i32>()?; // ✅ 使用 `?` 传播错误
 
-    Ok(qty * cost_per_item + processing_fee)
+    Ok(qty * cost_per_item + processing_fee) //5*34+1=171
 }
 
 #[cfg(test)]

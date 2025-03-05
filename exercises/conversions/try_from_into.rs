@@ -27,8 +27,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation and return an Ok result of inner
 // type Color. You need to create an implementation for a tuple of three
 // integers, an array of three integers, and a slice of integers.
@@ -37,10 +35,26 @@ enum IntoColorError {
 // time, but the slice implementation needs to check the slice length! Also note
 // that correct RGB color values must be integers in the 0..=255 range.
 
+/*
+在这段代码中，try_from 和 try_into 方法都用于尝试进行类型转换，但它们有一些不同：
+
+try_from 是一个泛型方法，它接受一个特定的类型作为参数，并尝试将其转换为 Color 类型。如果转换成功，它会返回 Ok(Color)，否则返回 Err。
+try_into 是一个实例方法，它尝试将调用它的值转换为另一个类型。在这个例子中，它被用于数组和切片，这些类型实现了 TryInto<Color> trait。
+*/
 // Tuple implementation
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        for i in [tuple.0, tuple.1, tuple.2] {
+            if i < 0 || i > 255 {
+                return Err(IntoColorError::IntConversion);
+            }
+        }
+        Ok(Color {
+            red: tuple.0 as u8,
+            green: tuple.1 as u8,
+            blue: tuple.2 as u8,
+        })
     }
 }
 
@@ -48,6 +62,7 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        Self::try_from((arr[0], arr[1], arr[2]))
     }
 }
 
@@ -55,23 +70,34 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        if slice.len() != 3 {
+            Err(IntoColorError::BadLen)
+        } else {
+            Self::try_from((slice[0], slice[1], slice[2]))
+        }
     }
 }
 
 fn main() {
     // Use the `try_from` function
+    // 使用 `try_from` 函数尝试将一个元组转换为 Color 类型
     let c1 = Color::try_from((183, 65, 14));
     println!("{:?}", c1);
 
     // Since TryFrom is implemented for Color, we should be able to use TryInto
+    // 由于 Color 实现了 TryFrom trait，我们可以使用 try_into 方法
+    // 这里将数组转换为 Result<Color, _> 类型，_ 表示忽略错误类型
     let c2: Result<Color, _> = [183, 65, 14].try_into();
     println!("{:?}", c2);
 
     let v = vec![183, 65, 14];
     // With slice we should use `try_from` function
+    // 使用切片和 `try_from` 函数尝试将切片转换为 Color 类型
     let c3 = Color::try_from(&v[..]);
     println!("{:?}", c3);
     // or take slice within round brackets and use TryInto
+    // 或者，可以在圆括号中取得切片，并使用 try_into 方法
+    // 同样将切片转换为 Result<Color, _> 类型
     let c4: Result<Color, _> = (&v[..]).try_into();
     println!("{:?}", c4);
 }

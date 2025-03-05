@@ -7,21 +7,30 @@
 // Execute `rustlings hint errors3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
+/*
+问题：原代码在 main 函数中误用 ? 操作符，导致错误返回类型与 main 签名冲突。
+修复：通过 match 语句显式处理 Result，分离成功/错误逻辑，确保类型安全
+*/
 use std::num::ParseIntError;
 
 fn main() {
     let mut tokens = 100;
     let pretend_user_input = "8";
 
-    let cost = total_cost(pretend_user_input)?;
-
-    if cost > tokens {
-        println!("You can't afford that many!");
-    } else {
-        tokens -= cost;
-        println!("You now have {} tokens.", tokens);
+    // ✅ 显式处理 Result，避免错误传播导致类型不匹配
+    match total_cost(pretend_user_input) {
+        Ok(cost) => {
+            if cost > tokens {
+                println!("You can't afford that many!");
+            } else {
+                tokens -= cost;
+                println!("You now have {} tokens.", tokens);
+            }
+        }
+        Err(e) => {
+            eprintln!("Error parsing input: {}", e);
+            std::process::exit(1);
+        }
     }
 }
 

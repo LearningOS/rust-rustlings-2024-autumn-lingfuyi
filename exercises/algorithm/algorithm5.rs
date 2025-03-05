@@ -1,14 +1,13 @@
 /*
-	bfs
-	This problem requires you to implement a basic BFS algorithm
+    bfs
+    This problem requires you to implement a basic BFS algorithm
 */
 
-//I AM NOT DONE
 use std::collections::VecDeque;
 
 // Define a graph
 struct Graph {
-    adj: Vec<Vec<usize>>, 
+    adj: Vec<Vec<usize>>,
 }
 
 impl Graph {
@@ -21,26 +20,47 @@ impl Graph {
 
     // Add an edge to the graph
     fn add_edge(&mut self, src: usize, dest: usize) {
-        self.adj[src].push(dest); 
-        self.adj[dest].push(src); 
+        self.adj[src].push(dest);
+        self.adj[dest].push(src);
     }
 
-    // Perform a breadth-first search on the graph, return the order of visited nodes
+    // 在图上执行广度优先搜索，返回访问节点的顺序
+    /*
+    adj: Vec<Vec<usize>> 表示图的邻接表存储，每个索引位置对应一个节点，存储该节点的邻接节点列表
+    queue: VecDeque 作为BFS的先进先出队列
+    visited: Vec<bool> 记录节点是否被访问过
+    */
     fn bfs_with_return(&self, start: usize) -> Vec<usize> {
-        
-		//TODO
+        let mut visit_order = vec![]; // 记录访问顺序
+        let mut queue = VecDeque::new(); // BFS队列
+        let mut visited = vec![false; self.adj.len()]; // 访问标记数组
 
-        let mut visit_order = vec![];
+        // 初始化队列和访问标记
+        queue.push_back(start);
+        visited[start] = true;
+
+        while let Some(node) = queue.pop_front() {
+            visit_order.push(node); // 记录当前节点
+
+            // 遍历邻接节点
+            for &neighbor in &self.adj[node] {
+                if !visited[neighbor] {
+                    visited[neighbor] = true;
+                    queue.push_back(neighbor);
+                }
+            }
+        }
+
         visit_order
     }
 }
-
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
+    //完整图的遍历顺序
     fn test_bfs_all_nodes_visited() {
         let mut graph = Graph::new(5);
         graph.add_edge(0, 1);
@@ -56,6 +76,7 @@ mod tests {
     }
 
     #[test]
+    //不同起始点的遍历顺序
     fn test_bfs_different_start() {
         let mut graph = Graph::new(3);
         graph.add_edge(0, 1);
@@ -66,6 +87,7 @@ mod tests {
     }
 
     #[test]
+    //有环的图的遍历顺序
     fn test_bfs_with_cycle() {
         let mut graph = Graph::new(3);
         graph.add_edge(0, 1);
@@ -77,6 +99,7 @@ mod tests {
     }
 
     #[test]
+    //单点图的边界情况
     fn test_bfs_single_node() {
         let mut graph = Graph::new(1);
 
@@ -84,4 +107,3 @@ mod tests {
         assert_eq!(visited_order, vec![0]);
     }
 }
-

@@ -8,10 +8,16 @@
 // Execute `rustlings hint traits3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
+use std::string;
+//当多个类型需要共享相同逻辑时，优先通过 trait 的默认方法实现。类似C++中的虚函数。
+// 这样可以避免重复代码，提高代码的可维护性。
+// 但是 trait 默认方法只能在 trait 定义中定义，不能在结构体中实现。
+// 因此，我们需要在结构体中实现 trait 的默认方法，并调用结构体的实例方法。
+// 这样可以避免重复代码，提高代码的可维护性。
 pub trait Licensed {
-    fn licensing_info(&self) -> String;
+    fn licensing_info(&self) -> String {
+        String::from("Some information")
+    }
 }
 
 struct SomeSoftware {

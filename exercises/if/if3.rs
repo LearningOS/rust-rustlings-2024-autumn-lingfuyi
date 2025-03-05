@@ -2,7 +2,7 @@
 //
 // Execute `rustlings hint if3` or use the `hint` watch subcommand for a hint.
 
-
+//返回habitat的函数，需要加入static关键字，延长生命周期，以便在函数外面调用。
 pub fn animal_habitat(animal: &str) -> &'static str {
     let identifier = if animal == "crab" {
         1

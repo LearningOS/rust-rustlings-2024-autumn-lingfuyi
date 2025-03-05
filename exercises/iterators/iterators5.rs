@@ -11,8 +11,6 @@
 // Execute `rustlings hint iterators5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -32,10 +30,13 @@ fn count_for(map: &HashMap<String, Progress>, value: Progress) -> usize {
     count
 }
 
+//统计集合中所有哈希表里值为 value 的条目总数。
 fn count_iterator(map: &HashMap<String, Progress>, value: Progress) -> usize {
     // map is a hashmap with String keys and Progress values.
     // map = { "variables1": Complete, "from_str": None, ... }
-    todo!();
+    //|&val| val == &value| 是闭包，捕获外部变量 value，Rust 通过值或引用传递（此处为引用）来捕获变量。
+    // 闭包返回布尔值，true 则计数，false 则不计数。
+    map.values().filter(|&val| val == &value).count()
 }
 
 fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
@@ -49,12 +50,15 @@ fn count_collection_for(collection: &[HashMap<String, Progress>], value: Progres
     }
     count
 }
-
+//通过 iter().map().sum() 替代嵌套 for 循环。
 fn count_collection_iterator(collection: &[HashMap<String, Progress>], value: Progress) -> usize {
     // collection is a slice of hashmaps.
     // collection = [{ "variables1": Complete, "from_str": None, ... },
     //     { "variables2": Complete, ... }, ... ]
-    todo!();
+    collection
+        .iter()
+        .map(|map| count_iterator(map, value)) //递归统计每个哈希表：map(|map| count_iterator(map, value)) 对每个哈希表调用 count_iterator
+        .sum()
 }
 
 #[cfg(test)]

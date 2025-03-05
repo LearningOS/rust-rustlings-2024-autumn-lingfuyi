@@ -10,8 +10,6 @@
 //
 // Execute `rustlings hint rc1` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::rc::Rc;
 
 #[derive(Debug)]
@@ -59,18 +57,25 @@ fn main() {
     println!("reference count = {}", Rc::strong_count(&sun)); // 6 references
     jupiter.details();
 
+    /*
+        问题：原代码为每个行星（土星/天王星/海王星）单独创建新的Sun实例，导致引用计数无法共享
+    解决：使用Rc::clone(&sun)复制现有引用计数，所有行星共享同一个Sun实例
+
+        */
     // TODO
-    let saturn = Planet::Saturn(Rc::new(Sun {}));
+    let saturn = Planet::Saturn(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 7 references
     saturn.details();
 
     // TODO
-    let uranus = Planet::Uranus(Rc::new(Sun {}));
+    // 修改点：使用Rc::clone共享原有Sun实例
+    let uranus = Planet::Uranus(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 8 references
     uranus.details();
 
     // TODO
-    let neptune = Planet::Neptune(Rc::new(Sun {}));
+    // 修改点：使用Rc::clone共享原有Sun实例
+    let neptune = Planet::Neptune(Rc::clone(&sun));
     println!("reference count = {}", Rc::strong_count(&sun)); // 9 references
     neptune.details();
 
@@ -92,12 +97,16 @@ fn main() {
     println!("reference count = {}", Rc::strong_count(&sun)); // 4 references
 
     // TODO
+    // 新增drop操作以正确减少引用计数
+    drop(earth);
     println!("reference count = {}", Rc::strong_count(&sun)); // 3 references
 
     // TODO
+    drop(venus);
     println!("reference count = {}", Rc::strong_count(&sun)); // 2 references
 
     // TODO
+    drop(mercury);
     println!("reference count = {}", Rc::strong_count(&sun)); // 1 reference
 
     assert_eq!(Rc::strong_count(&sun), 1);

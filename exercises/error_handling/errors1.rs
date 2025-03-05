@@ -9,14 +9,17 @@
 // Execute `rustlings hint errors1` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
-pub fn generate_nametag_text(name: String) -> Option<String> {
+/*
+函数返回类型是 Option<String>，但测试用例期望的是 Result 类型（例如 Ok(...) 和 Err(...)）。
+Rust 的 Result 类型（Result<T, E>）能更明确地表达“成功/错误”语义，而 Option 仅表示“存在/不存在”。
+总的来说，Option 适合用于可选的值，而 Result 适合用于可能出现的错误。
+*/
+pub fn generate_nametag_text(name: String) -> Result<String, String> {
     if name.is_empty() {
         // Empty names aren't allowed.
-        None
+        Err("`name` was empty; it must be nonempty.".into())
     } else {
-        Some(format!("Hi! My name is {}", name))
+        Ok(format!("Hi! My name is {}", name))
     }
 }
 

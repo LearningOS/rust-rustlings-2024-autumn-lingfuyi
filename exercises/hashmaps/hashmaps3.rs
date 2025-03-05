@@ -14,8 +14,6 @@
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 // A structure to store the goal details of a team.
@@ -39,6 +37,39 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be the number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+        /*
+            对于team1：
+            如果已经在哈希表中，取出他们的Team结构体，将当前比赛的team1_score加到goals_scored，team2_score加到goals_conceded。
+            如果不在哈希表中，创建新的Team实例，goals_scored为team1_score，conceded为team2_score，并插入哈希表。
+            同样的逻辑处理team2：
+        */
+        // 处理 team1
+        if let Some(team) = scores.get_mut(&team_1_name) {
+            team.goals_scored += team_1_score;
+            team.goals_conceded += team_2_score;
+        } else {
+            scores.insert(
+                team_1_name,
+                Team {
+                    goals_scored: team_1_score,
+                    goals_conceded: team_2_score,
+                },
+            );
+        }
+
+        // 处理 team2
+        if let Some(team) = scores.get_mut(&team_2_name) {
+            team.goals_scored += team_2_score;
+            team.goals_conceded += team_1_score;
+        } else {
+            scores.insert(
+                team_2_name,
+                Team {
+                    goals_scored: team_2_score,
+                    goals_conceded: team_1_score,
+                },
+            );
+        }
     }
     scores
 }
