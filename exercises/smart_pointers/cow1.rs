@@ -20,7 +20,7 @@ fn abs_all<'a, 'b>(input: &'a mut Cow<'b, [i32]>) -> &'a mut Cow<'b, [i32]> {
     for i in 0..input.len() {
         let v = input[i];
         if v < 0 {
-            // Clones into a vector if not already owned.
+            // 调用 to_mut() 方法确保 Cow 指向的数据是可变的。如果当前数据是 Borrowed 状态，to_mut() 会克隆数据并将其转换为 Owned，然后将该元素的值改为其绝对值。
             input.to_mut()[i] = -v;
         }
     }
